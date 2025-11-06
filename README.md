@@ -24,6 +24,9 @@ El agente está construido sobre el ecosistema **LangChain + Ollama + ChromaDB**
 * 🧾 Sentence Transformers
 
 📍 **Nivel de madurez tecnológica:** TRL 5–6 (validación de sistema completo en entorno relevante).
+
 📂 **Licencia:** MIT
+
 👤 **Autor:** Miguel Ángel Cañón
+
 🏫 **Escuela:** ECBTI – Ingeniería de Sistemas – UNAD
