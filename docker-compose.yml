@@ -20,7 +20,7 @@ services:
       # 🔹 Cambia el modelo aquí
       - OLLAMA_MODEL=gemma:2b
       - CHROMA_PERSIST_DIR=db/chroma
-      - EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
+      - EMBEDDING_MODEL=mxbai-embed-large
     ports:
       - "7860:7860"
     volumes:

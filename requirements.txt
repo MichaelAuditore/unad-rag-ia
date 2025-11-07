@@ -1,6 +1,12 @@
-langchain>=0.2.5
-langchain-community>=0.2.5
+# LangChain core
+langchain-core>=0.2.0
+langchain-community>=0.2.0
+
+# Chroma vector DB
 chromadb>=0.4.22
-sentence-transformers>=2.2.2
+
+# UI de chat
 gradio>=4.16.0
+
+# Lectura de PDFs
 pypdf>=3.17.1

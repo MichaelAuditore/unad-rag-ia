@@ -2,7 +2,7 @@ import os
 from langchain_community.vectorstores import Chroma
 from langchain_community.document_loaders import PyPDFLoader, TextLoader
 from langchain_community.llms import Ollama
-from langchain.embeddings import HuggingFaceEmbeddings
+from langchain_community.embeddings import OllamaEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains import ConversationalRetrievalChain
 from langchain.memory import ConversationBufferMemory
@@ -24,7 +24,7 @@ def build_rag(reindex=False):
 
     if not reindex and os.path.exists(persist_dir):
         print("✅ Cargando base vectorial existente...")
-        embeddings = HuggingFaceEmbeddings(model_name=os.getenv("EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2"))
+        embeddings = OllamaEmbeddings(model="mxbai-embed-large", base_url="http://localhost:11434")
         db = Chroma(persist_directory=persist_dir, embedding_function=embeddings)
     else:
         print("🔹 Cargando documentos...")
