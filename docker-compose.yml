@@ -8,7 +8,11 @@ services:
       - "11434:11434"
     environment:
       - OLLAMA_KEEP_ALIVE=true
-    command: serve
+    command: >
+      serve &
+      sleep 5 &&
+      pull qwen3:8b &&
+      tail -f /dev/null
     restart: unless-stopped
 
   unad_rag:
@@ -16,11 +20,11 @@ services:
     container_name: unad_rag
     environment:
       - LLM_BACKEND=ollama
-      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
       # 🔹 Cambia el modelo aquí
-      - OLLAMA_MODEL=gemma:2b
+      - OLLAMA_MODEL=qwen3:8b
       - CHROMA_PERSIST_DIR=db/chroma
-      - EMBEDDING_MODEL=mxbai-embed-large
+      - EMBEDDING_MODEL=nomic-embed-text
     ports:
       - "7860:7860"
     volumes:
@@ -29,6 +33,8 @@ services:
     depends_on:
       - ollama
     restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 volumes:
   ollama_data:
