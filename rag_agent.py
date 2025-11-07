@@ -1,12 +1,12 @@
+import os
 from langchain_community.vectorstores import Chroma
-from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import PyPDFLoader, TextLoader
 from langchain_community.llms import Ollama
-from langchain_classic.chains.conversational_retrieval.base import ConversationalRetrievalChain
-from langchain_classic.memory.buffer import ConversationBufferMemory
+from langchain.embeddings import HuggingFaceEmbeddings
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.chains import ConversationalRetrievalChain
+from langchain.memory import ConversationBufferMemory
 
-import os
 
 def load_documents(path="knowledge"):
     docs = []
@@ -18,33 +18,43 @@ def load_documents(path="knowledge"):
             docs.extend(TextLoader(full_path).load())
     return docs
 
-def build_rag():
-    print("🔹 Cargando documentos...")
-    documents = load_documents()
-    
-    splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=150)
-    texts = splitter.split_documents(documents)
-    
-    print("🔹 Generando embeddings...")
-    embeddings = HuggingFaceEmbeddings()
-    
-    print("🔹 Creando base vectorial...")
-    db = Chroma.from_documents(texts, embeddings, persist_directory="db/chroma")
+
+def build_rag(reindex=False):
+    persist_dir = os.getenv("CHROMA_PERSIST_DIR", "db/chroma")
+
+    if not reindex and os.path.exists(persist_dir):
+        print("✅ Cargando base vectorial existente...")
+        embeddings = HuggingFaceEmbeddings(model_name=os.getenv("EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2"))
+        db = Chroma(persist_directory=persist_dir, embedding_function=embeddings)
+    else:
+        print("🔹 Cargando documentos...")
+        documents = load_documents()
+
+        splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=150)
+        texts = splitter.split_documents(documents)
+
+        print("🔹 Generando embeddings...")
+        embeddings = HuggingFaceEmbeddings(model_name=os.getenv("EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2"))
+
+        print("🔹 Creando base vectorial...")
+        db = Chroma.from_documents(texts, embeddings, persist_directory=persist_dir)
 
     retriever = db.as_retriever(search_kwargs={"k": 3})
-    llm = Ollama(model="gemma:2b", base_url="http://localhost:11434")
+    llm = Ollama(model=os.getenv("OLLAMA_MODEL", "gemma:2b"),
+                 base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"))
 
     print("🔹 Creando memoria conversacional...")
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
 
-    print("🔹 Construyendo cadena RAG con memoria...")
+    print("🔹 Construyendo cadena RAG...")
     qa_chain = ConversationalRetrievalChain.from_llm(
         llm=llm,
         retriever=retriever,
         memory=memory,
-        chain_type="stuff",
         verbose=True
     )
     return qa_chain
 
-rag_agent = build_rag()
+
+# Construye el agente RAG
+rag_agent = build_rag(reindex=os.getenv("REINDEX", "false").lower() == "true")
