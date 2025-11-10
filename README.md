@@ -144,6 +144,7 @@ Y accede desde: [http://localhost:7860](http://localhost:7860)
 | ------------------------- | ----------------------------------------------------- |
 | Levantar todo             | `docker compose up --build`                           |
 | Reconstruir base de datos | `docker compose run unad_rag python app.py --reindex` |
+| Instalar modelo LLM       | `docker exec -it ollama ollama pull gemma:2b` |
 | Instalar modelo embedding | `docker exec -it ollama ollama pull nomic-embed-text` |
 | Cambiar modelo            | Edita `.env` y ejecuta `docker compose restart`       |
 | Detener contenedores      | `docker compose down`                                 |

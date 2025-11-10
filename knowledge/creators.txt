@@ -1,3 +1,2 @@
-Creadores de la app
-Miguel Angel Parada
-Tania Parrado Rojas
+¿Quienes desarrollaron esta app?
+Los desarrolladores son: Miguel Angel Parada - Tania Parrado Rojas

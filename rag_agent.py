@@ -59,7 +59,7 @@ def index_documents(chunks, embedding_function, persist_directory="db/chroma"):
     print(f"Indexing complete. Data saved to: {persist_directory}")
     return vectorstore
 
-def create_rag_chain(vector_store, llm_model_name="qwen3:0.6b", context_window=8192):
+def create_rag_chain(vector_store, llm_model_name="gemma:2b", context_window=8192):
     """Creates the RAG chain."""
     # Initialize the LLM
     llm = ChatOllama(
@@ -80,7 +80,6 @@ def create_rag_chain(vector_store, llm_model_name="qwen3:0.6b", context_window=8
     # Define the prompt template
     template = """
     Siempre responde en idioma español
-    un saludo debe ser respondido con un saludo acorde seguido de ¿En que puedo ayudarte?.
     Responde la pregunta basándote en el siguiente contexto. {context}
     Question: {question}
     Si la pregunta no puede ser respondida con el contexto proporcionado, responde No sé la respuesta.
@@ -117,7 +116,7 @@ def build_rag_agent():
     # vector_store = get_vector_store(embedding_function)
 
     # 5. Create RAG Chain
-    rag_chain = create_rag_chain(vector_store, llm_model_name="qwen3:0.6b") # Use the chosen Qwen 3 model
+    rag_chain = create_rag_chain(vector_store, llm_model_name="gemma:2b") # Use the chosen Qwen 3 model
 
     return rag_chain
 

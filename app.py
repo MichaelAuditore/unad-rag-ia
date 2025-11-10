@@ -3,14 +3,13 @@ from rag_agent import rag_agent
 
 def chat_with_ai(message, history):
     response = rag_agent.invoke(message)
-    answer = response
-    return answer
+    return response
 
 chatbot = gr.ChatInterface(
     fn=chat_with_ai,
     title="Asistente UNAD IA",
     description="Consulta programas académicos, políticas y reglamentos de la UNAD.",
-    theme="soft",
+    theme="dark",
     type="messages"    
 )
 
