@@ -25,6 +25,8 @@ services:
       - OLLAMA_MODEL=mistral:7b
       - CHROMA_PERSIST_DIR=db/chroma
       - EMBEDDING_MODEL=nomic-embed-text
+      - OLLAMA_KEEP_ALIVE=true
+      - OLLAMA_NUM_THREAD=2
     ports:
       - "7860:7860"
     volumes:
