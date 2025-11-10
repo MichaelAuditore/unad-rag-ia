@@ -90,7 +90,7 @@ Los más recomendados son:
 
 | Modelo       | Tamaño  | Características                                      |
 | ------------ | ------- | ---------------------------------------------------- |
-| `gemma:2b`   | ~2 GB   | Muy rápido, eficiente, ideal para respuestas simples |
+| `mistral:7b`   | ~2 GB   | Muy rápido, eficiente, ideal para respuestas simples |
 | `phi3:3.8b`  | ~3.8 GB | Excelente en español y razonamiento                  |
 | `mistral:7b` | ~7 GB   | Más potente, buena comprensión contextual            |
 | `llama3:8b`  | ~8 GB   | Buen equilibrio entre velocidad y calidad            |
@@ -144,7 +144,7 @@ Y accede desde: [http://localhost:7860](http://localhost:7860)
 | ------------------------- | ----------------------------------------------------- |
 | Levantar todo             | `docker compose up --build`                           |
 | Reconstruir base de datos | `docker compose run unad_rag python app.py --reindex` |
-| Instalar modelo LLM       | `docker exec -it ollama ollama pull gemma:2b` |
+| Instalar modelo LLM       | `docker exec -it ollama ollama pull mistral:7b` |
 | Instalar modelo embedding | `docker exec -it ollama ollama pull nomic-embed-text` |
 | Cambiar modelo            | Edita `.env` y ejecuta `docker compose restart`       |
 | Detener contenedores      | `docker compose down`                                 |

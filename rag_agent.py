@@ -29,7 +29,7 @@ def split_documents(documents):
     all_splits = text_splitter.split_documents(documents)
     return all_splits
 
-def get_embedding_function(model_name="nomic-embed-text"):
+def get_embedding_function(model_name="mxbai-embed-large"):
     """Initializes the Ollama embedding function."""
     # Ensure Ollama server is running (ollama serve)
     embeddings = OllamaEmbeddings(model=model_name, base_url="http://host.docker.internal:11434")
@@ -59,7 +59,7 @@ def index_documents(chunks, embedding_function, persist_directory="db/chroma"):
     print(f"Indexing complete. Data saved to: {persist_directory}")
     return vectorstore
 
-def create_rag_chain(vector_store, llm_model_name="gemma:2b", context_window=8192):
+def create_rag_chain(vector_store, llm_model_name="mistral:7b", context_window=8192):
     """Creates the RAG chain."""
     # Initialize the LLM
     llm = ChatOllama(
@@ -126,7 +126,7 @@ def build_rag_agent():
     chunks = split_documents(docs)
 
     # 3. Get Embedding Function
-    embedding_function = get_embedding_function() # Using Ollama nomic-embed-text
+    embedding_function = get_embedding_function() # Using Ollama mxbai-embed-large
 
     # 4. Index Documents (Only needs to be done once per document set)
     # Check if DB exists, if not, index. For simplicity, we might re-index here.
@@ -137,7 +137,7 @@ def build_rag_agent():
     # vector_store = get_vector_store(embedding_function)
 
     # 5. Create RAG Chain
-    rag_chain = create_rag_chain(vector_store, llm_model_name="gemma:2b") # Use the chosen Qwen 3 model
+    rag_chain = create_rag_chain(vector_store, llm_model_name="mistral:7b") # Use the chosen Qwen 3 model
 
     return rag_chain
 

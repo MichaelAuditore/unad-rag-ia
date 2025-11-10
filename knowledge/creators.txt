@@ -72,7 +72,7 @@ FLUJO DE FUNCIONAMIENTO
 
 1. El usuario abre la aplicación web y escribe su consulta.  
 2. El sistema procesa la pregunta y busca en la base vectorial los fragmentos más relevantes.  
-3. El modelo `gemma:2b` genera una respuesta basándose en ese contexto.  
+3. El modelo `mistral:7b` genera una respuesta basándose en ese contexto.  
 4. El asistente responde de manera conversacional y muestra el texto final en la interfaz.
 
 ────────────────────────────────────────────
