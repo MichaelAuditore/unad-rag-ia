@@ -22,7 +22,7 @@ def split_documents(documents):
     """Splits documents into smaller chunks."""
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=1000,
-        chunk_overlap=200,
+        chunk_overlap=100,
         length_function=len,
         is_separator_regex=False,
     )
@@ -59,21 +59,22 @@ def index_documents(chunks, embedding_function, persist_directory="db/chroma"):
     print(f"Indexing complete. Data saved to: {persist_directory}")
     return vectorstore
 
-def create_rag_chain(vector_store, llm_model_name="mistral:7b", context_window=8192):
+def create_rag_chain(vector_store, llm_model_name="mistral:7b", context_window=16384):
     """Creates the RAG chain."""
     # Initialize the LLM
     llm = ChatOllama(
         model=llm_model_name,
         temperature=0, # Lower temperature for more factual RAG answers
         num_ctx=context_window, # IMPORTANT: Set context window size
+        num_thread=8,
         base_url="http://host.docker.internal:11434"
     )
     print(f"Initialized ChatOllama with model: {llm_model_name}, context window: {context_window}")
 
     # Create the retriever
     retriever = vector_store.as_retriever(
-        search_type="similarity", # Or "mmr"
-        search_kwargs={'k': 3} # Retrieve top 3 relevant chunks
+        search_type="mmr", # Or "mmr"
+        search_kwargs={'k': 8, 'fetch_k': 20, 'lambda_mult': 0.6} # Retrieve top 3 relevant chunks
     )
     print("Retriever initialized.")
 

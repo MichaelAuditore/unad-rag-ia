@@ -7,11 +7,6 @@ WORKDIR /app
 # Copia primero los requerimientos (para aprovechar la caché de Docker)
 COPY requirements.txt .
 
-# Instala dependencias necesarias del sistema (curl, fonts, etc.)
-RUN apt-get update && apt-get install -y \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
-
 # Instala las dependencias de Python
 RUN pip install --no-cache-dir --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
