@@ -1,0 +1,42 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+    environment:
+      - OLLAMA_KEEP_ALIVE=true
+    command: >
+      serve &
+      sleep 5 &&
+      pull qwen3:8b &&
+      tail -f /dev/null
+    restart: unless-stopped
+
+  unad_rag:
+    build: .
+    container_name: unad_rag
+    environment:
+      - LLM_BACKEND=ollama
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      # 🔹 Cambia el modelo aquí
+      - OLLAMA_MODEL=mistral:7b
+      - CHROMA_PERSIST_DIR=db/chroma
+      - EMBEDDING_MODEL=nomic-embed-text
+      - OLLAMA_KEEP_ALIVE=true
+      - OLLAMA_NUM_THREAD=2
+    ports:
+      - "7860:7860"
+    volumes:
+      - ./knowledge:/app/knowledge
+      - ./db:/app/db
+    depends_on:
+      - ollama
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  ollama_data:
